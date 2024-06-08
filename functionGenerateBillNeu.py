@@ -70,7 +70,7 @@ class GenerateBill:
             EE2 = ee2_filter['ee2_result'].sum()
 
         results = pd.DataFrame({'id_service': id_service, 'EA': [EA], 'EC': [EC], 'EE1': [EE1], 'EE2': [EE2]})
-        
+
         return results
 
 
@@ -87,7 +87,7 @@ class GenerateBill:
 if __name__ == '__main__':
     data = DataCSV()
     calculator = GenerateBill()
-    # results_dataframe = calculator.run_services(data)
-    results_dataframe = calculator.generate_bill_neu(data, 2478)
+    results_dataframe = calculator.run_services(data)
+    # results_dataframe = calculator.generate_bill_neu(data, 2478)
     print(results_dataframe.sort_values(by='id_service'))
 

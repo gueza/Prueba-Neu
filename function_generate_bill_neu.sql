@@ -9,7 +9,7 @@ DECLARE
     total_injection FLOAT;
 	voltage_level_number INT;
     tariff_CU FLOAT;
-	tariff_EE2 FLOAT;
+	tariff_amount_EE2 FLOAT;
     tariff_C FLOAT;
 	market_id INT;
     cdi_number INT;
@@ -69,14 +69,14 @@ BEGIN
 			EE2 := 0;
 		ELSE
 			SELECT SUM((c.value - i.value) * b.value)
-			INTO tariff_EE2
+			INTO tariff_amount_EE2
 			FROM consumption c
 			INNER JOIN injection i ON i.id_record = c.id_record
 			INNER JOIN records r ON r.id_record = c.id_record
 			INNER JOIN xm_data_hourly_per_agent b ON b.record_timestamp = r.record_timestamp
 			WHERE r.id_service = service_id;
 	
-	        EE2 := tariff_EE2;
+	        EE2 := tariff_amount_EE2;
 	END IF;
 
     RETURN;
