@@ -53,10 +53,24 @@ class GenerateBill:
         if injection_amount <= consumption_amount:
             EE2 = 0
         else:
-            EE2 = 0; #faltante codigo
+            ee2_merge = pd.merge(data.records, data.xm_data_hourly_per_agent, on = 'record_timestamp', how = 'outer') 
+            ee2_merge = pd.merge(ee2_merge, consumption, on ='id_record', how = 'outer')
+            ee2_merge = pd.merge(ee2_merge, injection, on = 'id_record', how = 'outer')
+            ee2_merge.fillna(0, inplace = True) # lo que está indefinido a cero porque no está relacionado
+            ee2_filter = ee2_merge[ee2_merge['id_service'] == id_service]
 
-    
-        results = pd.DataFrame({'id_service': id_service, 'EA': [EA], 'EC': [EC], 'EE1': [EE1], 'EE2': [EE2],})
+            column_rename = {
+                'value_x': 'value_data_hourly',
+                'value_y': 'value_consumption',
+                'value': 'value_injection',
+            }
+            ee2_filter.rename(columns = column_rename, inplace = True)
+
+            ee2_filter['ee2_result'] = (ee2_filter['value_consumption'] - ee2_filter['value_injection']) * ee2_filter['value_data_hourly']
+            EE2 = ee2_filter['ee2_result'].sum()
+
+        results = pd.DataFrame({'id_service': id_service, 'EA': [EA], 'EC': [EC], 'EE1': [EE1], 'EE2': [EE2]})
+        
         return results
 
 
